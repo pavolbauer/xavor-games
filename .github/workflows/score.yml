@@ -1,0 +1,52 @@
+name: Score eintragen
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  score:
+    if: startsWith(github.event.issue.title, '[SCORE]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Score verarbeiten
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const nr = context.payload.issue.number;
+            const close = async (msg) => {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: nr, body: msg });
+              await github.rest.issues.update({ ...context.repo, issue_number: nr, state: 'closed' });
+            };
+            const t = context.payload.issue.title;
+            const m = t.match(/^\[SCORE\]\s*(water|city|doors|builder|rocket|double)\|(\d{1,7}(?:\.\d{1,2})?)\|([^|]{0,14})\|(.{1,12})$/);
+            if (!m) { await close('Format ungueltig - Eintrag ignoriert.'); return; }
+            const [, game, scoreS, lvlRaw, nameRaw] = m;
+            const TIME_GAMES = ['doors', 'builder', 'double']; /* niedriger = besser */
+            const score = TIME_GAMES.includes(game) ? Math.round(parseFloat(scoreS) * 10) / 10 : parseInt(scoreS, 10);
+            if (!isFinite(score) || score <= 0) { await close('Score ungueltig - Eintrag ignoriert.'); return; }
+            const lvl = lvlRaw.replace(/[^\w +$.\-]/g, '').trim().toUpperCase().slice(0, 12);
+            const name = (nameRaw.replace(/[^\w -]/g, '').trim().toUpperCase().slice(0, 12)) || 'ANON';
+            const file = 'scores.json';
+            let data = {};
+            try { data = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {}
+            if (!Array.isArray(data[game])) data[game] = [];
+            data[game].push({
+              name, score, lvl,
+              gh: context.payload.issue.user.login,
+              date: new Date().toISOString().slice(0, 10)
+            });
+            data[game].sort((a, b) => TIME_GAMES.includes(game) ? a.score - b.score : b.score - a.score);
+            data[game] = data[game].slice(0, 25);
+            fs.writeFileSync(file, JSON.stringify(data, null, 1));
+            await close('Score eingetragen! Er erscheint in ca. 1 Minute in der globalen Tabelle. Danke fuers Spielen!');
+      - name: Commit und Push
+        run: |
+          git config user.name "score-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add scores.json
+          git diff --cached --quiet || git commit -m "Neuer Highscore-Eintrag"
+          git push
