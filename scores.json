@@ -31,7 +31,15 @@
    "date": "2026-09-06"
   }
  ],
- "doors": [],
+ "doors": [
+  {
+   "name": "XAVORIND",
+   "score": 55.2,
+   "lvl": "12 ETAGEN",
+   "gh": "erdedfaargol",
+   "date": "2026-09-06"
+  }
+ ],
  "builder": [],
  "rocket": [],
  "double": []
