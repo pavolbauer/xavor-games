@@ -100,5 +100,13 @@
    "date": "2026-09-06"
   }
  ],
- "double": []
+ "double": [
+  {
+   "name": "ANDREJ",
+   "score": 14.3,
+   "lvl": "11 PAARE",
+   "gh": "pavolbauer",
+   "date": "2026-09-06"
+  }
+ ]
 }
