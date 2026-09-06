@@ -49,6 +49,14 @@
    "date": "2026-09-06"
   }
  ],
- "rocket": [],
+ "rocket": [
+  {
+   "name": "XAVORIND",
+   "score": 245,
+   "lvl": "+123$",
+   "gh": "erdedfaargol",
+   "date": "2026-09-06"
+  }
+ ],
  "double": []
 }
