@@ -15,7 +15,15 @@
    "date": "2026-09-06"
   }
  ],
- "city": [],
+ "city": [
+  {
+   "name": "XAVORIND",
+   "score": 226,
+   "lvl": "8",
+   "gh": "erdedfaargol",
+   "date": "2026-09-06"
+  }
+ ],
  "doors": [],
  "builder": [],
  "rocket": [],
