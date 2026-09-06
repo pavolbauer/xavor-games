@@ -40,7 +40,15 @@
    "date": "2026-09-06"
   }
  ],
- "builder": [],
+ "builder": [
+  {
+   "name": "XAVORIND",
+   "score": 36.7,
+   "lvl": "8 TEILE",
+   "gh": "erdedfaargol",
+   "date": "2026-09-06"
+  }
+ ],
  "rocket": [],
  "double": []
 }
